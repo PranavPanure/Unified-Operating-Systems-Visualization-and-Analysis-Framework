@@ -1,0 +1,37 @@
+name: Publish API and sandbox images
+
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/metadata-action@v5
+        id: api-meta
+        with:
+          images: ghcr.io/${{ github.repository }}/api
+          tags: type=ref,event=tag
+      - uses: docker/build-push-action@v6
+        with:
+          context: apps/api
+          push: true
+          tags: ${{ steps.api-meta.outputs.tags }}
+          labels: ${{ steps.api-meta.outputs.labels }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: apps/api/sandbox
+          push: true
+          tags: ghcr.io/${{ github.repository }}/linux-sandbox:latest

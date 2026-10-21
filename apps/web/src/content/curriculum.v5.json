@@ -1,0 +1,1551 @@
+{
+  "version": "v5",
+  "modules": [
+    {
+      "id": "m1",
+      "slug": "linux-terminal-fundamentals",
+      "number": 1,
+      "title": "Linux & Terminal Fundamentals",
+      "description": "Build command fluency and learn how shells translate intent into processes.",
+      "difficulty": "Beginner",
+      "duration": "2h 10m",
+      "accent": "#73ded1",
+      "prerequisites": [],
+      "lessons": [
+        {
+          "id": "shell-model",
+          "slug": "shell-model",
+          "title": "The shell is a program",
+          "summary": "Separate terminal, shell, kernel, and command execution.",
+          "duration": "18 min",
+          "objectives": [
+            "Explain the shell/kernel boundary",
+            "Read a command as program plus arguments"
+          ],
+          "workedExample": "Type `whoami`: the shell finds the executable, asks the OS to create work, and prints the result.",
+          "mistakes": [
+            "Confusing a terminal emulator with the shell",
+            "Assuming every command is a shell builtin"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/terminal",
+          "challenge": "Run `pwd` and `whoami` in the terminal lab. Explain which part is shell state and which part comes from the operating system."
+        },
+        {
+          "id": "shell-composition",
+          "slug": "shell-composition",
+          "title": "Compose commands deliberately",
+          "summary": "Use quoting, exit status, variables, and short command chains.",
+          "duration": "18 min",
+          "objectives": [
+            "Predict expansion",
+            "Explain && and pipe behavior"
+          ],
+          "workedExample": "Run `mkdir lab && cd lab`: the second command runs only when the first exits successfully.",
+          "mistakes": [
+            "Treating every space as a separator inside quotes",
+            "Ignoring exit status"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/terminal",
+          "challenge": "Create a directory with `mkdir`, enter it with `cd`, and use `pwd` to prove that the shell working directory changed."
+        },
+        {
+          "id": "shell-expansion",
+          "slug": "shell-expansion",
+          "title": "Expansion happens before execution",
+          "summary": "Predict quoting, variables, globbing, and command substitution before a program receives its arguments.",
+          "duration": "18 min",
+          "objectives": [
+            "Trace shell expansion order",
+            "Protect data with quoting"
+          ],
+          "workedExample": "In `echo \"$HOME/*.txt\"`, quoting keeps the glob literal instead of expanding matching filenames.",
+          "mistakes": [
+            "Assuming programs receive the original command line",
+            "Using unquoted variables for paths"
+          ],
+          "recap": "Write the expansion steps down, then test one change at a time in the terminal lab.",
+          "labRoute": "/terminal",
+          "challenge": "Use a quoted and unquoted variable containing a space. Predict how many arguments each command receives before running it."
+        }
+      ]
+    },
+    {
+      "id": "m2",
+      "slug": "files-and-directories",
+      "number": 2,
+      "title": "Files & Directories",
+      "description": "Navigate a filesystem, compose pipelines, and reason about streams.",
+      "difficulty": "Beginner",
+      "duration": "3h 05m",
+      "accent": "#8dc7f2",
+      "prerequisites": [
+        "m1"
+      ],
+      "lessons": [
+        {
+          "id": "filesystem-navigation",
+          "slug": "filesystem-navigation",
+          "title": "Paths are addresses",
+          "summary": "Use absolute and relative paths without guessing.",
+          "duration": "18 min",
+          "objectives": [
+            "Distinguish absolute and relative paths",
+            "Navigate safely with pwd and cd"
+          ],
+          "workedExample": "From `/home/student`, `cd ../shared` resolves to `/home/shared`.",
+          "mistakes": [
+            "Using `rm` before checking pwd",
+            "Forgetting that `.` and `..` are directory entries"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/terminal",
+          "challenge": "Start in `/home/student`, navigate to `projects`, then return with `cd ..` without guessing the path."
+        },
+        {
+          "id": "streams-and-pipelines",
+          "slug": "streams-and-pipelines",
+          "title": "Streams are process connections",
+          "summary": "Use stdin, stdout, stderr, redirection, and pipelines as data paths.",
+          "duration": "18 min",
+          "objectives": [
+            "Trace a pipeline",
+            "Separate output from errors"
+          ],
+          "workedExample": "The left process writes bytes to a pipe while the right process reads them from stdin.",
+          "mistakes": [
+            "Confusing > with |",
+            "Assuming stderr follows stdout automatically"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/terminal",
+          "challenge": "Run a pipeline and a redirection separately. Explain which process owns stdout in each case."
+        },
+        {
+          "id": "links-and-metadata",
+          "slug": "links-and-metadata",
+          "title": "Links are names with consequences",
+          "summary": "Compare hard links, symbolic links, and metadata changes through small filesystem experiments.",
+          "duration": "18 min",
+          "objectives": [
+            "Predict link behavior",
+            "Separate data from directory metadata"
+          ],
+          "workedExample": "Removing one hard link does not remove the inode while another directory entry still points to it.",
+          "mistakes": [
+            "Expecting a symlink to survive its target",
+            "Confusing link count with file size"
+          ],
+          "recap": "Create two names for one file, change the target, and observe what each name resolves to.",
+          "labRoute": "/terminal",
+          "challenge": "Create two names for one file in the terminal model, change the file through one name, and inspect it through the other."
+        }
+      ]
+    },
+    {
+      "id": "m3",
+      "slug": "users-groups-permissions",
+      "number": 3,
+      "title": "Users, Groups & Permissions",
+      "description": "Understand ownership and privilege boundaries through permission puzzles.",
+      "difficulty": "Beginner",
+      "duration": "2h 40m",
+      "accent": "#f5bd72",
+      "prerequisites": [
+        "m2"
+      ],
+      "lessons": [
+        {
+          "id": "permission-bits",
+          "slug": "permission-bits",
+          "title": "Read the permission triplet",
+          "summary": "Decode rwx bits and calculate octal modes.",
+          "duration": "18 min",
+          "objectives": [
+            "Map rwx to numeric values",
+            "Explain directory execute permission"
+          ],
+          "workedExample": "755 means owner rwx, group r-x, and others r-x.",
+          "mistakes": [
+            "Treating directory write as file write",
+            "Using sudo instead of diagnosing ownership"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/terminal",
+          "challenge": "Calculate 640 by hand, then use the command reference to explain the owner, group, and other bits."
+        },
+        {
+          "id": "privilege-boundaries",
+          "slug": "privilege-boundaries",
+          "title": "Privilege is a boundary",
+          "summary": "Reason about ownership, sudo, umask, and least privilege.",
+          "duration": "18 min",
+          "objectives": [
+            "Calculate effective access",
+            "Choose a least-privilege fix"
+          ],
+          "workedExample": "A directory can be readable but not searchable; access requires the execute bit on each parent.",
+          "mistakes": [
+            "Using chmod 777 as a default fix",
+            "Forgetting group ownership"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/terminal",
+          "challenge": "Choose a least-privilege permission instead of 777 for a shared report file and justify the choice."
+        },
+        {
+          "id": "umask-and-defaults",
+          "slug": "umask-and-defaults",
+          "title": "Defaults are policy",
+          "summary": "Use umask to explain why newly created files and directories start with different permissions.",
+          "duration": "18 min",
+          "objectives": [
+            "Calculate effective creation permissions",
+            "Choose a safer default"
+          ],
+          "workedExample": "A requested 666 file with umask 027 becomes 640 because masked bits are removed at creation.",
+          "mistakes": [
+            "Treating umask as a chmod command",
+            "Applying directory and file base modes identically"
+          ],
+          "recap": "Calculate the default first, then apply an explicit chmod only when the policy requires it.",
+          "labRoute": "/terminal",
+          "challenge": "Calculate the result of requested mode 666 with umask 027, then explain which bits were removed."
+        }
+      ]
+    },
+    {
+      "id": "m4",
+      "slug": "processes-job-control",
+      "number": 4,
+      "title": "Processes & Job Control",
+      "description": "Watch programs become processes and learn how signals shape their lifecycle.",
+      "difficulty": "Intermediate",
+      "duration": "3h 20m",
+      "accent": "#c59df2",
+      "prerequisites": [
+        "m1"
+      ],
+      "lessons": [
+        {
+          "id": "process-lifecycle",
+          "slug": "process-lifecycle",
+          "title": "A process has a lifecycle",
+          "summary": "Explore PID, PPID, states, signals, and wait.",
+          "duration": "18 min",
+          "objectives": [
+            "Describe fork/exec/wait",
+            "Identify zombie and orphan states"
+          ],
+          "workedExample": "A shell forks a child, the child execs a program, and the parent waits for its status.",
+          "mistakes": [
+            "Calling a program a process before it runs",
+            "Assuming kill always means terminate"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/terminal",
+          "challenge": "Draw the fork → exec → wait sequence, then use the process lesson example to identify the parent and child."
+        },
+        {
+          "id": "signals-and-jobs",
+          "slug": "signals-and-jobs",
+          "title": "Signals are asynchronous requests",
+          "summary": "Control foreground and background jobs without confusing signal delivery with termination.",
+          "duration": "18 min",
+          "objectives": [
+            "Map common signals",
+            "Read a process tree"
+          ],
+          "workedExample": "SIGTERM asks a process to exit cleanly; SIGKILL cannot be caught or handled.",
+          "mistakes": [
+            "Calling every signal a kill",
+            "Losing track of the parent process"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/terminal",
+          "challenge": "Compare SIGTERM and SIGKILL in the command reference and write one cleanup action SIGTERM allows."
+        },
+        {
+          "id": "zombies-and-orphans",
+          "slug": "zombies-and-orphans",
+          "title": "When parents lose track",
+          "summary": "Distinguish zombie processes from orphaned processes by following parent and wait relationships.",
+          "duration": "18 min",
+          "objectives": [
+            "Explain why zombies retain an entry",
+            "Predict orphan reparenting"
+          ],
+          "workedExample": "A child that exits before its parent calls wait remains a zombie until its exit status is collected.",
+          "mistakes": [
+            "Calling every stopped process a zombie",
+            "Assuming an orphan is automatically stuck"
+          ],
+          "recap": "Trace PID, PPID, exit, and wait as separate state transitions.",
+          "labRoute": "/terminal",
+          "challenge": "Describe what happens if a child exits before its parent calls wait. Name the state that remains."
+        }
+      ]
+    },
+    {
+      "id": "m5",
+      "slug": "cpu-scheduling",
+      "number": 5,
+      "title": "CPU Scheduling",
+      "description": "Operate a scheduler and compare fairness, throughput, and response time.",
+      "difficulty": "Intermediate",
+      "duration": "4h 15m",
+      "accent": "#72d7c7",
+      "prerequisites": [
+        "m4"
+      ],
+      "lessons": [
+        {
+          "id": "scheduling-objectives",
+          "slug": "scheduling-objectives",
+          "title": "Why schedule at all?",
+          "summary": "Translate workloads into scheduling objectives.",
+          "duration": "18 min",
+          "objectives": [
+            "Calculate waiting and turnaround time",
+            "Explain preemption"
+          ],
+          "workedExample": "A Gantt chart is a trace of CPU ownership, not merely a bar chart.",
+          "mistakes": [
+            "Mixing arrival and completion time",
+            "Forgetting idle CPU intervals"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/visualizers/scheduling?preset=objectives",
+          "challenge": "Open the scheduling preset, add an idle interval before the first arrival, and compare waiting with turnaround time."
+        },
+        {
+          "id": "preemption-and-fairness",
+          "slug": "preemption-and-fairness",
+          "title": "Preemption changes the trace",
+          "summary": "Compare response, waiting, fairness, and context-switch tradeoffs.",
+          "duration": "18 min",
+          "objectives": [
+            "Identify a preemption point",
+            "Compare average metrics"
+          ],
+          "workedExample": "Round Robin trades longer completion for a better first response when the quantum is short.",
+          "mistakes": [
+            "Comparing only turnaround",
+            "Forgetting context-switch cost"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/visualizers/scheduling?preset=preemption",
+          "challenge": "Run the preemption preset, identify the exact arrival that changes the CPU owner, and explain the tradeoff."
+        },
+        {
+          "id": "response-time",
+          "slug": "response-time",
+          "title": "Fairness has a clock",
+          "summary": "Use response time and throughput together when judging an interactive scheduler.",
+          "duration": "18 min",
+          "objectives": [
+            "Calculate first response time",
+            "Explain workload-sensitive tradeoffs"
+          ],
+          "workedExample": "Response time is the first CPU start minus arrival, so a long job can still have a fast first response.",
+          "mistakes": [
+            "Using completion time for response",
+            "Calling the shortest average wait universally fair"
+          ],
+          "recap": "Measure when work first starts and when it finishes; they answer different questions.",
+          "labRoute": "/visualizers/scheduling?preset=response",
+          "challenge": "Run the response preset and name the process with the best first response. Do not use completion time as your reason."
+        }
+      ]
+    },
+    {
+      "id": "m6",
+      "slug": "memory-management-paging",
+      "number": 6,
+      "title": "Memory, Virtual Memory & Paging",
+      "description": "Trace address translation, page faults, and replacement decisions.",
+      "difficulty": "Intermediate",
+      "duration": "4h 30m",
+      "accent": "#9fcb7d",
+      "prerequisites": [
+        "m4"
+      ],
+      "lessons": [
+        {
+          "id": "address-translation",
+          "slug": "address-translation",
+          "title": "From virtual to physical",
+          "summary": "Walk through pages, frames, and the TLB.",
+          "duration": "18 min",
+          "objectives": [
+            "Translate an address",
+            "Explain a page fault"
+          ],
+          "workedExample": "A virtual address splits into page number and offset; the page table maps the page to a frame.",
+          "mistakes": [
+            "Treating a page as a byte",
+            "Counting a TLB hit as a page fault"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/visualizers/paging?preset=translation",
+          "challenge": "Run the paging translation preset and label one hit and one page fault in the reference trace."
+        },
+        {
+          "id": "replacement-policies",
+          "slug": "replacement-policies",
+          "title": "Replacement is a prediction problem",
+          "summary": "Compare FIFO, LRU, and Optimal on the same reference string.",
+          "duration": "18 min",
+          "objectives": [
+            "Trace frame contents",
+            "Explain why Optimal is a bound"
+          ],
+          "workedExample": "Optimal evicts the page whose next use is farthest in the future—or never occurs.",
+          "mistakes": [
+            "Counting a hit as a fault",
+            "Changing frame count mid-trace"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/visualizers/paging?preset=replacement",
+          "challenge": "Change the paging policy between FIFO and LRU. Point to one reference where their frame decisions differ."
+        },
+        {
+          "id": "thrashing-and-working-sets",
+          "slug": "thrashing-and-working-sets",
+          "title": "Too little memory changes everything",
+          "summary": "Recognize working sets, page-fault pressure, and why adding multiprogramming can reduce throughput.",
+          "duration": "18 min",
+          "objectives": [
+            "Identify thrashing symptoms",
+            "Relate locality to frame allocation"
+          ],
+          "workedExample": "If active processes need more frames than memory provides, the system can spend more time paging than executing.",
+          "mistakes": [
+            "Treating every page fault as thrashing",
+            "Adding processes without checking locality"
+          ],
+          "recap": "Watch fault rate and useful CPU work together before changing a replacement policy.",
+          "labRoute": "/visualizers/paging?preset=thrashing",
+          "challenge": "Run the thrashing preset, count the fault-heavy region, and explain why adding active pages increases pressure."
+        }
+      ]
+    },
+    {
+      "id": "m7",
+      "slug": "synchronization",
+      "number": 7,
+      "title": "Synchronization",
+      "description": "Make race conditions visible and compare mutexes, semaphores, and monitors.",
+      "difficulty": "Advanced",
+      "duration": "3h 45m",
+      "accent": "#f08b9a",
+      "prerequisites": [
+        "m4"
+      ],
+      "lessons": [
+        {
+          "id": "critical-sections",
+          "slug": "critical-sections",
+          "title": "The critical section",
+          "summary": "Find the exact region where interleavings become dangerous.",
+          "duration": "18 min",
+          "objectives": [
+            "Identify a race",
+            "State a mutual-exclusion guarantee"
+          ],
+          "workedExample": "Two increments can lose an update when read-modify-write operations interleave.",
+          "mistakes": [
+            "Confusing concurrency with parallelism",
+            "Using a lock without naming its invariant"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/visualizers/synchronization?preset=critical",
+          "challenge": "Use the synchronization lab to fill and drain the buffer. Identify the operation that would block at capacity."
+        },
+        {
+          "id": "producer-consumer",
+          "slug": "producer-consumer",
+          "title": "Coordination preserves invariants",
+          "summary": "Use a bounded buffer to see blocking, capacity, and condition signaling.",
+          "duration": "18 min",
+          "objectives": [
+            "Identify empty/full blocking",
+            "State the buffer invariant"
+          ],
+          "workedExample": "A producer must wait when the buffer is full; a consumer must wait when it is empty.",
+          "mistakes": [
+            "Treating sleep as synchronization",
+            "Checking capacity after mutation"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/visualizers/synchronization?preset=buffer",
+          "challenge": "Run the buffer preset and locate the first blocked producer action in the trace."
+        },
+        {
+          "id": "monitors-and-conditions",
+          "slug": "monitors-and-conditions",
+          "title": "Wait for a condition",
+          "summary": "Compare mutex ownership with condition waiting and make the protected invariant explicit.",
+          "duration": "18 min",
+          "objectives": [
+            "Explain wait/signal behavior",
+            "Write a condition predicate"
+          ],
+          "workedExample": "A consumer waits while the buffer is empty, releases the lock while waiting, then rechecks after wake-up.",
+          "mistakes": [
+            "Using if instead of rechecking while",
+            "Signaling without changing the predicate"
+          ],
+          "recap": "Name the predicate, protect it with the lock, and recheck it after every wake-up.",
+          "labRoute": "/visualizers/synchronization?preset=conditions",
+          "challenge": "Run the conditions preset and explain why a consumer must check the predicate again after waking."
+        }
+      ]
+    },
+    {
+      "id": "m8",
+      "slug": "deadlocks",
+      "number": 8,
+      "title": "Deadlocks",
+      "description": "Detect unsafe states and practice Banker-style resource reasoning.",
+      "difficulty": "Advanced",
+      "duration": "3h 10m",
+      "accent": "#efaa73",
+      "prerequisites": [
+        "m7"
+      ],
+      "lessons": [
+        {
+          "id": "deadlock-conditions",
+          "slug": "deadlock-conditions",
+          "title": "The four conditions",
+          "summary": "Use a resource graph to reason about deadlock.",
+          "duration": "18 min",
+          "objectives": [
+            "Name the four conditions",
+            "Distinguish safe and unsafe states"
+          ],
+          "workedExample": "Removing circular wait is enough to prevent deadlock even if other conditions remain.",
+          "mistakes": [
+            "Calling every wait a deadlock",
+            "Checking only one process in a safe sequence"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/visualizers/deadlocks?preset=conditions",
+          "challenge": "Change the available resources until the deadlock lab reports unsafe. Explain why unsafe is not identical to deadlocked."
+        },
+        {
+          "id": "bankers-algorithm",
+          "slug": "bankers-algorithm",
+          "title": "Safe does not mean fast",
+          "summary": "Run the safety algorithm and validate a resource request.",
+          "duration": "18 min",
+          "objectives": [
+            "Calculate Need",
+            "Reject an unsafe request"
+          ],
+          "workedExample": "A state is safe only if every process can finish in some valid sequence with current resources.",
+          "mistakes": [
+            "Finding one partial sequence",
+            "Ignoring maximum claims"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/visualizers/deadlocks?preset=banker",
+          "challenge": "Run the Banker preset and read the safe sequence from left to right before changing one available resource."
+        },
+        {
+          "id": "recovery-and-detection",
+          "slug": "recovery-and-detection",
+          "title": "Deadlock handling is a policy",
+          "summary": "Compare prevention, avoidance, detection, and recovery instead of treating them as one algorithm.",
+          "duration": "18 min",
+          "objectives": [
+            "Classify a deadlock strategy",
+            "Choose a recovery tradeoff"
+          ],
+          "workedExample": "Detection allows flexible allocation but periodically searches for cycles and must choose victims when one is found.",
+          "mistakes": [
+            "Calling an unsafe state a confirmed deadlock",
+            "Ignoring rollback cost"
+          ],
+          "recap": "Ask whether the system prevents, predicts, detects, or repairs the problem.",
+          "labRoute": "/visualizers/deadlocks?preset=recovery",
+          "challenge": "Use the recovery preset, change one resource value, and describe whether the policy is allowing, detecting, or recovering."
+        }
+      ]
+    },
+    {
+      "id": "m9",
+      "slug": "storage-filesystems",
+      "number": 9,
+      "title": "Storage, Disks & Filesystems",
+      "description": "Connect file descriptors, inodes, mounts, and disk-head movement.",
+      "difficulty": "Intermediate",
+      "duration": "3h 40m",
+      "accent": "#a8a2ef",
+      "prerequisites": [
+        "m2",
+        "m4"
+      ],
+      "lessons": [
+        {
+          "id": "inode-model",
+          "slug": "inode-model",
+          "title": "Names point to inodes",
+          "summary": "Separate directory entries from file metadata.",
+          "duration": "18 min",
+          "objectives": [
+            "Explain hard versus symbolic links",
+            "Read inode metadata"
+          ],
+          "workedExample": "A hard link adds another directory name for the same inode.",
+          "mistakes": [
+            "Assuming a filename is the file",
+            "Treating a symlink as a second copy"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/visualizers/disk",
+          "challenge": "Use the terminal lab to inspect a file path and explain why a filename is a directory entry rather than the file data itself."
+        },
+        {
+          "id": "disk-policies",
+          "slug": "disk-policies",
+          "title": "Movement is a policy consequence",
+          "summary": "Compare locality, fairness, and boundary behavior across disk schedulers.",
+          "duration": "18 min",
+          "objectives": [
+            "Trace head direction",
+            "State boundary assumptions"
+          ],
+          "workedExample": "LOOK reverses at the last request rather than travelling to the physical edge.",
+          "mistakes": [
+            "Mixing SCAN and LOOK",
+            "Dropping the return jump in C-SCAN"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/visualizers/disk?preset=disk-policies",
+          "challenge": "Run the disk preset, switch LOOK to SCAN, and compare the extra boundary movement."
+        },
+        {
+          "id": "mounts-and-fsync",
+          "slug": "mounts-and-fsync",
+          "title": "Persistence has layers",
+          "summary": "Connect mounts, caches, writeback, and fsync to what a successful write really means.",
+          "duration": "18 min",
+          "objectives": [
+            "Explain a mount point",
+            "Distinguish visibility from durability"
+          ],
+          "workedExample": "A write can be visible to a process before fsync forces relevant data and metadata toward stable storage.",
+          "mistakes": [
+            "Treating close as a universal durability guarantee",
+            "Assuming every path is on one filesystem"
+          ],
+          "recap": "Separate namespace visibility, kernel cache state, and durable storage.",
+          "labRoute": "/visualizers/disk",
+          "challenge": "Explain the difference between a visible write in the cache and a write requested to reach stable storage."
+        }
+      ]
+    },
+    {
+      "id": "m10",
+      "slug": "shell-scripting",
+      "number": 10,
+      "title": "Shell Scripting",
+      "description": "Turn command fluency into repeatable, defensive automation.",
+      "difficulty": "Intermediate",
+      "duration": "3h 30m",
+      "accent": "#74aee8",
+      "prerequisites": [
+        "m2",
+        "m3"
+      ],
+      "lessons": [
+        {
+          "id": "script-control-flow",
+          "slug": "script-control-flow",
+          "title": "Scripts are small programs",
+          "summary": "Use variables, conditions, loops, and exit codes.",
+          "duration": "18 min",
+          "objectives": [
+            "Quote variables safely",
+            "Return meaningful status codes"
+          ],
+          "workedExample": "A script should fail loudly when an expected file is missing.",
+          "mistakes": [
+            "Unquoted expansion",
+            "Ignoring the exit status of a pipeline"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/terminal",
+          "challenge": "Write a three-step command chain with `&&` and predict which steps run after a deliberate failure."
+        },
+        {
+          "id": "defensive-scripts",
+          "slug": "defensive-scripts",
+          "title": "Automation needs failure semantics",
+          "summary": "Use quoting, traps, exit codes, and defensive checks in Bash scripts.",
+          "duration": "18 min",
+          "objectives": [
+            "Write a fail-safe command chain",
+            "Explain a non-zero status"
+          ],
+          "workedExample": "A script that deletes files should validate its working directory and input before acting.",
+          "mistakes": [
+            "Unquoted glob expansion",
+            "Using eval on user input"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/terminal",
+          "challenge": "Design a safe deletion pre-check: verify the current directory and reject an empty input before acting."
+        },
+        {
+          "id": "script-testing",
+          "slug": "script-testing",
+          "title": "Scripts need experiments too",
+          "summary": "Use test inputs, shellcheck-style reasoning, and controlled failures to make automation trustworthy.",
+          "duration": "18 min",
+          "objectives": [
+            "Design a failure case",
+            "Check shell assumptions"
+          ],
+          "workedExample": "A script test should include a missing input, a filename with spaces, and a command that returns non-zero.",
+          "mistakes": [
+            "Testing only the happy path",
+            "Depending on the current working directory"
+          ],
+          "recap": "Treat scripts as programs: specify inputs, expected status, and cleanup.",
+          "labRoute": "/terminal",
+          "challenge": "Test a command with a filename containing spaces and record the failure mode an unquoted variable would create."
+        }
+      ]
+    },
+    {
+      "id": "m11",
+      "slug": "networking-ipc",
+      "number": 11,
+      "title": "Networking & IPC",
+      "description": "Explore sockets, pipes, signals, and safe communication boundaries.",
+      "difficulty": "Advanced",
+      "duration": "3h 55m",
+      "accent": "#d49fe4",
+      "prerequisites": [
+        "m4"
+      ],
+      "lessons": [
+        {
+          "id": "pipes-and-sockets",
+          "slug": "pipes-and-sockets",
+          "title": "Processes communicate",
+          "summary": "Compare streams, datagrams, and shared state.",
+          "duration": "18 min",
+          "objectives": [
+            "Choose an IPC primitive",
+            "Explain a socket endpoint"
+          ],
+          "workedExample": "A pipe is a unidirectional byte stream with a parent-child ownership story.",
+          "mistakes": [
+            "Treating a port as a process",
+            "Forgetting framing in a byte stream"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/terminal",
+          "challenge": "Choose a pipe for byte-stream data and a signal for notification. Explain why swapping those choices is awkward."
+        },
+        {
+          "id": "ipc-choices",
+          "slug": "ipc-choices",
+          "title": "Choose communication by ownership",
+          "summary": "Compare pipes, FIFOs, signals, shared memory, and sockets.",
+          "duration": "18 min",
+          "objectives": [
+            "Select an IPC primitive",
+            "Identify synchronization needs"
+          ],
+          "workedExample": "Shared memory is fast but requires a separate synchronization protocol.",
+          "mistakes": [
+            "Treating shared memory as message passing",
+            "Forgetting framing"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/terminal",
+          "challenge": "For shared data between unrelated processes, choose an IPC primitive and name the synchronization it still needs."
+        },
+        {
+          "id": "signals-and-pipes",
+          "slug": "signals-and-pipes",
+          "title": "Communication has failure modes",
+          "summary": "Reason about closed pipes, interrupted reads, signal delivery, and partial communication.",
+          "duration": "18 min",
+          "objectives": [
+            "Predict a broken-pipe outcome",
+            "Separate notification from data transfer"
+          ],
+          "workedExample": "A writer may receive SIGPIPE when every reader closes the pipe, while a signal itself carries no byte stream.",
+          "mistakes": [
+            "Assuming writes are always complete",
+            "Using signals for bulk data"
+          ],
+          "recap": "Choose a primitive based on whether you need data, notification, or shared state.",
+          "labRoute": "/terminal",
+          "challenge": "Explain what can happen when every reader closes a pipe while a writer continues sending data."
+        }
+      ]
+    },
+    {
+      "id": "m12",
+      "slug": "os-internals",
+      "number": 12,
+      "title": "OS Internals & Advanced Topics",
+      "description": "Tie user mode, system calls, interrupts, containers, and observability together.",
+      "difficulty": "Advanced",
+      "duration": "4h 25m",
+      "accent": "#9fd4ba",
+      "prerequisites": [
+        "m5",
+        "m6",
+        "m8"
+      ],
+      "lessons": [
+        {
+          "id": "system-call-boundary",
+          "slug": "system-call-boundary",
+          "title": "Crossing into the kernel",
+          "summary": "Understand traps, system calls, and privilege levels.",
+          "duration": "18 min",
+          "objectives": [
+            "Explain user/kernel mode",
+            "Trace a system-call boundary"
+          ],
+          "workedExample": "A system call is a controlled entry point, not a direct jump into arbitrary kernel memory.",
+          "mistakes": [
+            "Calling an interrupt a system call",
+            "Assuming containers are virtual machines"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/terminal",
+          "challenge": "Choose one terminal command and describe the controlled transition from user mode to a kernel service."
+        },
+        {
+          "id": "mode-switching",
+          "slug": "mode-switching",
+          "title": "The kernel boundary is observable",
+          "summary": "Connect system calls, traps, interrupts, containers, and userspace observability.",
+          "duration": "18 min",
+          "objectives": [
+            "Trace a mode switch",
+            "Separate containers from VMs"
+          ],
+          "workedExample": "A system call transitions through a controlled entry path and returns with a status value.",
+          "mistakes": [
+            "Assuming containers emulate hardware",
+            "Treating an interrupt as a syscall"
+          ],
+          "recap": "Connect the command or model to the OS boundary it exercises, then try a variation in the lab.",
+          "labRoute": "/terminal",
+          "challenge": "Use the observability lesson to distinguish a system call, an interrupt, and a container boundary."
+        },
+        {
+          "id": "observability-and-tracing",
+          "slug": "observability-and-tracing",
+          "title": "Observe before you optimize",
+          "summary": "Use system-call traces, counters, and timelines to connect user behavior to kernel work.",
+          "duration": "18 min",
+          "objectives": [
+            "Choose a useful observation point",
+            "Separate symptom from cause"
+          ],
+          "workedExample": "A trace can show repeated open/read calls even when the visible symptom is only a slow command.",
+          "mistakes": [
+            "Measuring only wall-clock time",
+            "Changing policy before collecting a trace"
+          ],
+          "recap": "Build a small timeline first; then form one hypothesis and test it.",
+          "labRoute": "/terminal",
+          "challenge": "Form one hypothesis about a slow command and name the trace or counter you would collect first."
+        }
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "slug": "pwd",
+      "name": "pwd",
+      "category": "Navigation",
+      "description": "Print the current working directory.",
+      "syntax": "pwd",
+      "concept": "Process working directory",
+      "examples": [
+        {
+          "input": "pwd",
+          "output": "/home/student"
+        }
+      ]
+    },
+    {
+      "slug": "ls",
+      "name": "ls",
+      "category": "Navigation",
+      "description": "List directory entries.",
+      "syntax": "ls [options] [path]",
+      "concept": "Directory entries",
+      "examples": [
+        {
+          "input": "ls -la",
+          "output": "drwxr-xr-x  .  ..  notes.txt"
+        }
+      ]
+    },
+    {
+      "slug": "cd",
+      "name": "cd",
+      "category": "Navigation",
+      "description": "Change the shell working directory.",
+      "syntax": "cd [path]",
+      "concept": "Shell state",
+      "examples": [
+        {
+          "input": "cd projects && pwd",
+          "output": "/home/student/projects"
+        }
+      ]
+    },
+    {
+      "slug": "mkdir",
+      "name": "mkdir",
+      "category": "Files",
+      "description": "Create directories.",
+      "syntax": "mkdir [-p] directory",
+      "concept": "Filesystem hierarchy",
+      "examples": [
+        {
+          "input": "mkdir -p labs/week1",
+          "output": ""
+        }
+      ]
+    },
+    {
+      "slug": "touch",
+      "name": "touch",
+      "category": "Files",
+      "description": "Create an empty file or update timestamps.",
+      "syntax": "touch file...",
+      "concept": "Inodes and metadata",
+      "examples": [
+        {
+          "input": "touch notes.txt",
+          "output": ""
+        }
+      ]
+    },
+    {
+      "slug": "cat",
+      "name": "cat",
+      "category": "Streams",
+      "description": "Write file contents to standard output.",
+      "syntax": "cat file...",
+      "concept": "File descriptors and streams",
+      "examples": [
+        {
+          "input": "cat notes.txt",
+          "output": "remember to inspect the exit code"
+        }
+      ]
+    },
+    {
+      "slug": "grep",
+      "name": "grep",
+      "category": "Streams",
+      "description": "Select lines matching a pattern.",
+      "syntax": "grep [options] pattern [file...]",
+      "concept": "Pipelines and text streams",
+      "examples": [
+        {
+          "input": "grep error app.log",
+          "output": "error: retry requested"
+        }
+      ]
+    },
+    {
+      "slug": "find",
+      "name": "find",
+      "category": "Files",
+      "description": "Walk a directory tree and evaluate predicates.",
+      "syntax": "find path [expression]",
+      "concept": "Directory traversal",
+      "examples": [
+        {
+          "input": "find . -name \"*.sh\"",
+          "output": "./backup.sh"
+        }
+      ]
+    },
+    {
+      "slug": "chmod",
+      "name": "chmod",
+      "category": "Permissions",
+      "description": "Change file mode bits.",
+      "syntax": "chmod MODE file...",
+      "concept": "Access control",
+      "examples": [
+        {
+          "input": "chmod 640 report.txt",
+          "output": ""
+        }
+      ],
+      "safety": "Changing permissions can expose secrets or make a script executable."
+    },
+    {
+      "slug": "ps",
+      "name": "ps",
+      "category": "Processes",
+      "description": "Report a snapshot of running processes.",
+      "syntax": "ps [options]",
+      "concept": "Process table",
+      "examples": [
+        {
+          "input": "ps",
+          "output": "PID TTY          TIME CMD\n42  pts/0    00:00:00 bash"
+        }
+      ]
+    },
+    {
+      "slug": "kill",
+      "name": "kill",
+      "category": "Processes",
+      "description": "Send a signal to a process.",
+      "syntax": "kill [-SIGNAL] PID",
+      "concept": "Signals",
+      "examples": [
+        {
+          "input": "kill -TERM 42",
+          "output": ""
+        }
+      ],
+      "safety": "Only signal processes you own or are explicitly allowed to manage."
+    },
+    {
+      "slug": "echo",
+      "name": "echo",
+      "category": "Shell",
+      "description": "Print arguments or expanded variables.",
+      "syntax": "echo [text...]",
+      "concept": "Expansion and output",
+      "examples": [
+        {
+          "input": "echo $HOME",
+          "output": "/home/student"
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-shell-1",
+      "moduleId": "m1",
+      "title": "Find your bearings",
+      "difficulty": "Beginner",
+      "type": "multiple-choice",
+      "prompt": "Which command prints the directory you are currently inside?",
+      "options": [
+        "pwd",
+        "ps",
+        "whoami",
+        "which"
+      ],
+      "answer": "pwd",
+      "explanation": "pwd prints the shell process working directory.",
+      "points": 10
+    },
+    {
+      "id": "ex-shell-2",
+      "moduleId": "m1",
+      "title": "Who interprets the line?",
+      "difficulty": "Beginner",
+      "type": "multiple-choice",
+      "prompt": "Which component parses a command line before asking the kernel to run a program?",
+      "options": [
+        "The shell",
+        "The CPU cache",
+        "The inode",
+        "The page table"
+      ],
+      "answer": "The shell",
+      "explanation": "The shell tokenizes input, expands syntax, and starts programs through OS interfaces.",
+      "points": 10
+    },
+    {
+      "id": "ex-files-1",
+      "moduleId": "m2",
+      "title": "Pipeline order",
+      "difficulty": "Beginner",
+      "type": "multiple-choice",
+      "prompt": "Which symbol sends standard output into another command?",
+      "options": [
+        ">",
+        "|",
+        "&&",
+        "&"
+      ],
+      "answer": "|",
+      "explanation": "A pipe connects one process stdout to the next process stdin.",
+      "points": 10
+    },
+    {
+      "id": "ex-files-2",
+      "moduleId": "m2",
+      "title": "Keep errors separate",
+      "difficulty": "Beginner",
+      "type": "short-answer",
+      "prompt": "Which redirection operator sends standard error to a file?",
+      "answer": "2>",
+      "explanation": "File descriptor 2 is standard error, so 2> writes it to a separate destination.",
+      "points": 10
+    },
+    {
+      "id": "ex-perm-1",
+      "moduleId": "m3",
+      "title": "Decode 640",
+      "difficulty": "Beginner",
+      "type": "short-answer",
+      "prompt": "What octal permission gives the owner read/write, the group read, and everyone else no access?",
+      "answer": "640",
+      "explanation": "6 is rw-, 4 is r--, and 0 is ---.",
+      "points": 15
+    },
+    {
+      "id": "ex-perm-2",
+      "moduleId": "m3",
+      "title": "Search a directory",
+      "difficulty": "Beginner",
+      "type": "multiple-choice",
+      "prompt": "Which permission lets a user traverse a directory and reach an entry inside it?",
+      "options": [
+        "Execute",
+        "Read",
+        "Write",
+        "Sticky"
+      ],
+      "answer": "Execute",
+      "explanation": "Directory execute permission allows traversal and name lookup when combined with the required parent permissions.",
+      "points": 15
+    },
+    {
+      "id": "ex-process-1",
+      "moduleId": "m4",
+      "title": "Lifecycle order",
+      "difficulty": "Intermediate",
+      "type": "multiple-choice",
+      "prompt": "Which call replaces a process image with a new program?",
+      "options": [
+        "fork()",
+        "exec()",
+        "wait()",
+        "kill()"
+      ],
+      "answer": "exec()",
+      "explanation": "exec replaces the current process image; it does not create a second process.",
+      "points": 15
+    },
+    {
+      "id": "ex-process-2",
+      "moduleId": "m4",
+      "title": "Ask before force",
+      "difficulty": "Intermediate",
+      "type": "multiple-choice",
+      "prompt": "Which signal gives a process a chance to clean up before exiting?",
+      "options": [
+        "SIGTERM",
+        "SIGKILL",
+        "SIGSTOP",
+        "SIGCHLD"
+      ],
+      "answer": "SIGTERM",
+      "explanation": "SIGTERM is a request that can be handled; SIGKILL cannot be caught or cleaned up.",
+      "points": 15
+    },
+    {
+      "id": "ex-schedule-1",
+      "moduleId": "m5",
+      "title": "FCFS decision",
+      "difficulty": "Intermediate",
+      "type": "algorithm",
+      "prompt": "For P1(arrival 0, burst 4), P2(arrival 1, burst 2), which process runs first under FCFS?",
+      "options": [
+        "P1",
+        "P2"
+      ],
+      "answer": "P1",
+      "explanation": "FCFS selects the earliest arrived ready process.",
+      "points": 15
+    },
+    {
+      "id": "ex-schedule-2",
+      "moduleId": "m5",
+      "title": "Quantum tradeoff",
+      "difficulty": "Intermediate",
+      "type": "multiple-choice",
+      "prompt": "What usually happens when a Round Robin quantum becomes very small?",
+      "options": [
+        "Response improves but context switches increase",
+        "All processes finish at once",
+        "Preemption disappears",
+        "Waiting time becomes zero"
+      ],
+      "answer": "Response improves but context switches increase",
+      "explanation": "A shorter quantum shares the CPU more frequently, improving first response at the cost of more switching overhead.",
+      "points": 15
+    },
+    {
+      "id": "ex-memory-1",
+      "moduleId": "m6",
+      "title": "Page fault",
+      "difficulty": "Intermediate",
+      "type": "multiple-choice",
+      "prompt": "What happens when a referenced page is not in a physical frame?",
+      "options": [
+        "A page fault trap occurs",
+        "The CPU halts permanently",
+        "The TLB is cleared only",
+        "The process always exits"
+      ],
+      "answer": "A page fault trap occurs",
+      "explanation": "The OS handles the fault, often loading the page from backing storage.",
+      "points": 15
+    },
+    {
+      "id": "ex-memory-2",
+      "moduleId": "m6",
+      "title": "Best possible replacement",
+      "difficulty": "Intermediate",
+      "type": "multiple-choice",
+      "prompt": "Which replacement policy is an ideal lower bound because it knows future references?",
+      "options": [
+        "Optimal",
+        "FIFO",
+        "LRU",
+        "Random"
+      ],
+      "answer": "Optimal",
+      "explanation": "Optimal evicts the page whose next use is farthest in the future and is used as a comparison bound.",
+      "points": 15
+    },
+    {
+      "id": "ex-sync-1",
+      "moduleId": "m7",
+      "title": "Full buffer",
+      "difficulty": "Advanced",
+      "type": "multiple-choice",
+      "prompt": "What should a producer do when a bounded buffer is full?",
+      "options": [
+        "Wait until space is available",
+        "Overwrite an arbitrary item",
+        "Consume its own item",
+        "Disable interrupts forever"
+      ],
+      "answer": "Wait until space is available",
+      "explanation": "The full-buffer condition blocks production until a consumer creates capacity.",
+      "points": 20
+    },
+    {
+      "id": "ex-deadlock-1",
+      "moduleId": "m8",
+      "title": "Safe state",
+      "difficulty": "Advanced",
+      "type": "multiple-choice",
+      "prompt": "Which condition must be broken to prevent deadlock?",
+      "options": [
+        "Circular wait",
+        "Compilation",
+        "Address translation",
+        "Cache locality"
+      ],
+      "answer": "Circular wait",
+      "explanation": "Preventing any one of the four necessary conditions prevents deadlock.",
+      "points": 20
+    },
+    {
+      "id": "ex-deadlock-2",
+      "moduleId": "m8",
+      "title": "Calculate remaining need",
+      "difficulty": "Advanced",
+      "type": "multiple-choice",
+      "prompt": "In Banker’s algorithm, how is a process’s remaining Need calculated?",
+      "options": [
+        "Maximum − Allocation",
+        "Allocation − Maximum",
+        "Available + Maximum",
+        "Maximum × Allocation"
+      ],
+      "answer": "Maximum − Allocation",
+      "explanation": "Need records the resources a process may still request before it can finish.",
+      "points": 20
+    },
+    {
+      "id": "ex-disk-1",
+      "moduleId": "m9",
+      "title": "Head movement",
+      "difficulty": "Intermediate",
+      "type": "short-answer",
+      "prompt": "Starting at track 50, how far does FCFS move to service 70 then 30?",
+      "answer": "60",
+      "explanation": "The head moves 20 tracks to 70, then 40 to 30: total 60.",
+      "points": 15
+    },
+    {
+      "id": "ex-disk-2",
+      "moduleId": "m9",
+      "title": "LOOK avoids empty travel",
+      "difficulty": "Intermediate",
+      "type": "multiple-choice",
+      "prompt": "How does LOOK differ from SCAN at the end of a request run?",
+      "options": [
+        "It reverses at the last request",
+        "It always jumps to track zero",
+        "It ignores direction",
+        "It services only the nearest request"
+      ],
+      "answer": "It reverses at the last request",
+      "explanation": "LOOK follows the current direction only as far as the last pending request, avoiding travel to the physical edge.",
+      "points": 15
+    },
+    {
+      "id": "ex-script-1",
+      "moduleId": "m10",
+      "title": "Exit means a result",
+      "difficulty": "Intermediate",
+      "type": "short-answer",
+      "prompt": "What numeric exit status conventionally means a command succeeded?",
+      "answer": "0",
+      "explanation": "Shell commands conventionally return zero for success and a non-zero status for failure.",
+      "points": 15
+    },
+    {
+      "id": "ex-ipc-1",
+      "moduleId": "m11",
+      "title": "Shared memory needs guards",
+      "difficulty": "Advanced",
+      "type": "multiple-choice",
+      "prompt": "What must accompany shared memory when multiple processes update the same data?",
+      "options": [
+        "A synchronization protocol",
+        "A second filename",
+        "A larger terminal",
+        "A DNS record"
+      ],
+      "answer": "A synchronization protocol",
+      "explanation": "Shared memory provides speed, but mutexes, semaphores, or another protocol must protect concurrent access.",
+      "points": 20
+    },
+    {
+      "id": "ex-internals-1",
+      "moduleId": "m12",
+      "title": "Controlled entry",
+      "difficulty": "Advanced",
+      "type": "multiple-choice",
+      "prompt": "What is the purpose of a system-call boundary?",
+      "options": [
+        "Controlled transition from user mode to kernel mode",
+        "Direct access to every physical address",
+        "Replacing the scheduler",
+        "Disabling all interrupts"
+      ],
+      "answer": "Controlled transition from user mode to kernel mode",
+      "explanation": "System calls provide a checked entry path into privileged OS services.",
+      "points": 20
+    },
+    {
+      "id": "ex-shell-3",
+      "moduleId": "m1",
+      "title": "Quote the path",
+      "difficulty": "Beginner",
+      "type": "multiple-choice",
+      "prompt": "What is the safest way to pass a path stored in $FILE to a command?",
+      "options": [
+        "\"$FILE\"",
+        "$FILE",
+        "eval $FILE",
+        "echo $FILE | sh"
+      ],
+      "answer": "\"$FILE\"",
+      "explanation": "Quoting prevents spaces and glob characters in the value from becoming extra arguments or expansions.",
+      "points": 10
+    },
+    {
+      "id": "ex-files-3",
+      "moduleId": "m2",
+      "title": "Hard-link identity",
+      "difficulty": "Beginner",
+      "type": "multiple-choice",
+      "prompt": "What do two hard links initially share?",
+      "options": [
+        "The same inode",
+        "Only the same filename",
+        "A separate copy of the bytes",
+        "The same process ID"
+      ],
+      "answer": "The same inode",
+      "explanation": "Hard links are directory entries that reference the same inode and underlying file data.",
+      "points": 15
+    },
+    {
+      "id": "ex-perm-3",
+      "moduleId": "m3",
+      "title": "Apply umask",
+      "difficulty": "Beginner",
+      "type": "short-answer",
+      "prompt": "A file requested with mode 666 has umask 027. What effective mode is created?",
+      "answer": "640",
+      "explanation": "The umask removes group write and all others permissions: 666 masked by 027 gives 640.",
+      "points": 15
+    },
+    {
+      "id": "ex-process-3",
+      "moduleId": "m4",
+      "title": "Collect the child",
+      "difficulty": "Intermediate",
+      "type": "multiple-choice",
+      "prompt": "What removes a terminated child from the process table?",
+      "options": [
+        "The parent calls wait",
+        "The child calls exec",
+        "The shell changes directory",
+        "The CPU flushes its cache"
+      ],
+      "answer": "The parent calls wait",
+      "explanation": "wait collects the child status and releases the remaining process-table entry.",
+      "points": 15
+    },
+    {
+      "id": "ex-schedule-3",
+      "moduleId": "m5",
+      "title": "First response",
+      "difficulty": "Intermediate",
+      "type": "short-answer",
+      "prompt": "A process arrives at 4 and first runs at 9. What is its response time?",
+      "answer": "5",
+      "explanation": "Response time is first start minus arrival: 9 − 4 = 5.",
+      "points": 15
+    },
+    {
+      "id": "ex-memory-3",
+      "moduleId": "m6",
+      "title": "Spot thrashing",
+      "difficulty": "Intermediate",
+      "type": "multiple-choice",
+      "prompt": "Which pattern most strongly suggests thrashing?",
+      "options": [
+        "High page-fault activity with little useful CPU work",
+        "One TLB hit",
+        "A process finishing quickly",
+        "A larger terminal window"
+      ],
+      "answer": "High page-fault activity with little useful CPU work",
+      "explanation": "Thrashing consumes resources servicing faults instead of executing useful instructions.",
+      "points": 15
+    },
+    {
+      "id": "ex-sync-2",
+      "moduleId": "m7",
+      "title": "Recheck after wake",
+      "difficulty": "Advanced",
+      "type": "multiple-choice",
+      "prompt": "Why should a condition wait usually be inside a while loop?",
+      "options": [
+        "Another thread may change the predicate before the lock is reacquired",
+        "Loops make the mutex faster",
+        "Signals cannot interrupt if statements",
+        "The buffer becomes larger"
+      ],
+      "answer": "Another thread may change the predicate before the lock is reacquired",
+      "explanation": "Wake-up does not prove the condition is still true, so the predicate must be checked again while holding the lock.",
+      "points": 20
+    },
+    {
+      "id": "ex-deadlock-3",
+      "moduleId": "m8",
+      "title": "Name the strategy",
+      "difficulty": "Advanced",
+      "type": "multiple-choice",
+      "prompt": "Which approach allows requests only when the resulting state remains safe?",
+      "options": [
+        "Avoidance",
+        "Detection only",
+        "Recovery only",
+        "Random allocation"
+      ],
+      "answer": "Avoidance",
+      "explanation": "Avoidance evaluates a proposed allocation against a safety condition before committing it.",
+      "points": 20
+    },
+    {
+      "id": "ex-disk-3",
+      "moduleId": "m9",
+      "title": "Visibility versus durability",
+      "difficulty": "Intermediate",
+      "type": "multiple-choice",
+      "prompt": "Which operation is specifically used to request that buffered file data reach stable storage?",
+      "options": [
+        "fsync",
+        "pwd",
+        "fork",
+        "grep"
+      ],
+      "answer": "fsync",
+      "explanation": "fsync asks the system to flush relevant file state toward stable storage; visibility alone does not guarantee durability.",
+      "points": 15
+    },
+    {
+      "id": "ex-script-2",
+      "moduleId": "m10",
+      "title": "Test the edge",
+      "difficulty": "Intermediate",
+      "type": "multiple-choice",
+      "prompt": "Which input is especially important when testing a shell script that handles filenames?",
+      "options": [
+        "A filename containing spaces",
+        "Only a filename named test",
+        "An empty terminal screen",
+        "A larger CPU"
+      ],
+      "answer": "A filename containing spaces",
+      "explanation": "Spaces expose unsafe unquoted expansion and argument-splitting bugs.",
+      "points": 15
+    },
+    {
+      "id": "ex-ipc-2",
+      "moduleId": "m11",
+      "title": "Pipe failure",
+      "difficulty": "Advanced",
+      "type": "multiple-choice",
+      "prompt": "What can happen when a process writes to a pipe after all readers have closed it?",
+      "options": [
+        "It may receive SIGPIPE",
+        "It always creates a new reader",
+        "The data becomes a socket",
+        "The kernel starts a scheduler"
+      ],
+      "answer": "It may receive SIGPIPE",
+      "explanation": "A closed read end can cause a write to fail and deliver SIGPIPE according to process handling.",
+      "points": 20
+    },
+    {
+      "id": "ex-internals-2",
+      "moduleId": "m12",
+      "title": "Trace before tuning",
+      "difficulty": "Advanced",
+      "type": "multiple-choice",
+      "prompt": "What is the best first move when a command is unexpectedly slow?",
+      "options": [
+        "Collect a focused trace or measurement",
+        "Change every scheduler setting",
+        "Disable all interrupts",
+        "Delete the command"
+      ],
+      "answer": "Collect a focused trace or measurement",
+      "explanation": "Observation narrows the cause before a policy change is made.",
+      "points": 20
+    }
+  ]
+}

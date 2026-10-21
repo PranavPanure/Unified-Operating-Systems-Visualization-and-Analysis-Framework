@@ -1,0 +1,13 @@
+{
+  "name": "os-a2z",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": ["apps/web"],
+  "scripts": {
+    "dev": "npm --workspace apps/web run dev",
+    "build": "npm --workspace apps/web run build",
+    "test": "npm --workspace apps/web run test",
+    "typecheck": "npm --workspace apps/web run typecheck",
+    "lint": "npm --workspace apps/web run lint"
+  }
+}
