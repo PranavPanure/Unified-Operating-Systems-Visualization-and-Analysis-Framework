@@ -18,9 +18,18 @@ This deployment layout keeps the API and Podman sandbox on the same Linux VPS. T
 
 The script does not create cloud accounts, DNS records, database instances, or TLS certificates on your behalf.
 
-## GitHub Pages option
+## Vercel frontend option
 
-The repository includes `.github/workflows/deploy-pages.yml`. In GitHub repository settings, enable Pages with **GitHub Actions** as the source and create the repository variable `VITE_API_BASE_URL` containing the public API URL. Every push to `main` then builds and deploys the frontend. The API and sandbox still need to run on a Linux VPS.
+Use GitHub as the source repository and connect it to Vercel. Create a Vercel project with the repository root set to `apps/web`, then configure:
+
+```text
+Build command: npm run build
+Output directory: dist
+Install command: npm ci
+Environment variable: VITE_API_BASE_URL=https://api.example.com/api/v1
+```
+
+The API and sandbox still need to run on a Linux VPS. No GitHub Pages configuration is required.
 
 The `publish-images.yml` workflow publishes tagged API and sandbox images to GitHub Container Registry. It is useful when the VPS should pull versioned images instead of building locally.
 

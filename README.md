@@ -64,7 +64,7 @@ The compose file defines PostgreSQL and the API service. The browser release cur
 
 See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for the staging checklist, production environment, sandbox isolation requirements, monitoring, and rollback procedure.
 
-For a VPS handoff, see [`deploy/README.md`](deploy/README.md) and the included systemd, Caddy, environment, and Ubuntu bootstrap files.
+For a Vercel-plus-VPS handoff, see [`deploy/README.md`](deploy/README.md) and the included systemd, Caddy, environment, and Ubuntu bootstrap files.
 
 ## Important scope note
 
