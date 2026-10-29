@@ -101,3 +101,37 @@ h3 { font-size: 1.15rem; }
 .landing-hero h1 { font-size: clamp(3rem, 7.2vw, 6.2rem); line-height: .92; }
 @media (max-width: 760px) { .landing-hero { padding-top: 64px; padding-bottom: 48px; } .landing-hero h1 { font-size: clamp(2.8rem, 13vw, 5rem); } }
 @media (max-width: 760px) { .mission-grid { grid-template-columns: 1fr; }.mission-footer { align-items: flex-start; flex-direction: column; } }
+
+/* Full-size Podman terminal: the real sandbox should feel like a shell, not a form. */
+.terminal-mode-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; padding: 6px; border: 1px solid #263e49; border-radius: 10px; background: #0d171e; }
+.terminal-mode-tabs button { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px; border: 1px solid transparent; border-radius: 7px; color: #8299a8; background: transparent; text-align: left; cursor: pointer; }.terminal-mode-tabs button:hover { color: #d8eceb; background: #14232b; }.terminal-mode-tabs button.active { border-color: #3f7876; color: #e4f7f3; background: #17302f; box-shadow: inset 0 0 0 1px #70d8ce22; }.terminal-mode-tabs button > svg { color: #70d8ce; flex: 0 0 auto; }.terminal-mode-tabs button span { display: grid; gap: 3px; }.terminal-mode-tabs strong { font-size: .8rem; }.terminal-mode-tabs small { color: #78929d; font-size: .67rem; }.terminal-mode-tabs em { margin-left: auto; color: #72d9ce; font: 700 .61rem ui-monospace, monospace; font-style: normal; }
+.terminal-page[data-terminal-mode="safe"] .linux-runner { display: none; }.terminal-page[data-terminal-mode="linux"] .terminal-layout { display: none; }.terminal-page[data-terminal-mode="linux"] .linux-runner { display: block; }
+.linux-runner { overflow: hidden; padding: 0; border: 1px solid #294852; border-radius: 10px; background: #061016; box-shadow: 0 24px 70px #0005; }
+.linux-terminal-topbar { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 17px; border-bottom: 1px solid #1e3a42; color: #89a6ae; background: #0d1a20; font-size: .73rem; }
+.linux-terminal-topbar > span:first-child { display: flex; gap: 6px; margin-right: 3px; }
+.linux-terminal-topbar i { display: block; width: 9px; height: 9px; border-radius: 50%; background: #df7d73; }
+.linux-terminal-topbar i:nth-child(2) { background: #ddbd6f; }.linux-terminal-topbar i:nth-child(3) { background: #6ed2a2; }
+.linux-terminal-topbar strong { display: flex; align-items: center; gap: 7px; color: #c6d9dc; font-weight: 600; }.linux-terminal-topbar .runner-status { margin-left: auto; }
+.linux-terminal-content { min-height: 390px; padding: 24px; color: #b9d8cf; font: .82rem/1.7 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.linux-terminal-intro { display: grid; gap: 3px; margin-bottom: 18px; }.linux-terminal-intro small { color: #66818b; font-size: .7rem; }.linux-prompt { color: #70dfce; white-space: nowrap; }
+.linux-runner-form { display: flex; align-items: center; gap: 9px; min-height: 42px; margin-top: 24px; padding: 0 12px; border: 1px solid #2d5660; border-radius: 6px; background: #09161c; box-shadow: inset 0 1px #ffffff08; }
+.linux-runner-form input { flex: 1; min-width: 0; border: 0; outline: 0; color: #e6f5f0; background: transparent; font: inherit; }.linux-runner-form button { padding: 7px 14px; border: 1px solid #5bc7bd; border-radius: 5px; color: #06211e; background: #70d8ce; font: 700 .75rem inherit; cursor: pointer; }.linux-runner-form button:disabled { cursor: not-allowed; opacity: .5; }
+.linux-terminal-content .runner-result { margin: 16px 0 0; }.linux-terminal-content .runner-result > div { display: flex; gap: 12px; color: #6faaa5; font-size: .7rem; }.linux-terminal-content .runner-result pre { margin: 10px 0 0; padding: 0; overflow: auto; color: #d1ece4; white-space: pre-wrap; }.linux-terminal-content .runner-stderr { color: #f0aaa0 !important; }.linux-terminal-content .runner-error { margin-top: 15px; color: #f0aaa0; }
+@media (max-width: 760px) { .terminal-mode-tabs { grid-template-columns: 1fr; }.terminal-mode-tabs button { min-height: 54px; }.linux-terminal-content { min-height: 330px; padding: 18px; }.linux-terminal-topbar { padding: 0 12px; }.linux-terminal-topbar .runner-status { display: none; }.linux-runner-form { align-items: stretch; flex-wrap: wrap; padding: 10px; }.linux-runner-form input { flex-basis: calc(100% - 8px); }.linux-runner-form button { margin-left: auto; } }
+
+/* Linux mode should read as a shell session, not as a card containing a form. */
+.terminal-page[data-terminal-mode="linux"] .linux-runner { min-height: 590px; border-color: #24414a; border-radius: 8px; background: #050d12; box-shadow: 0 18px 60px #0007; }
+.terminal-page[data-terminal-mode="linux"] .linux-terminal-topbar { min-height: 54px; padding: 0 20px; background: #0b171d; }
+.terminal-page[data-terminal-mode="linux"] .linux-terminal-content { min-height: 536px; padding: 30px 28px; background: #050d12; }
+.terminal-page[data-terminal-mode="linux"] .linux-terminal-intro { margin-bottom: 24px; }
+.terminal-page[data-terminal-mode="linux"] .linux-terminal-intro > span:nth-child(2) { color: #e1f2ec; }
+.terminal-page[data-terminal-mode="linux"] .linux-terminal-intro small { color: #54737d; }
+.terminal-page[data-terminal-mode="linux"] .linux-runner-form { min-height: 30px; margin-top: 24px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.terminal-page[data-terminal-mode="linux"] .linux-runner-form input { caret-color: #70d8ce; color: #edfdf8; }
+.terminal-page[data-terminal-mode="linux"] .linux-runner-form input::placeholder { color: #6d858d; opacity: .8; }
+.terminal-page[data-terminal-mode="linux"] .linux-runner-form button { display: none; }
+.terminal-page[data-terminal-mode="linux"] .linux-terminal-content .runner-result { margin-top: 20px; }
+.terminal-page[data-terminal-mode="linux"] .linux-terminal-content .runner-result > div { color: #5e9892; }
+.terminal-page[data-terminal-mode="linux"] .linux-terminal-content .runner-result pre { color: #d6f3e8; }
+.linux-transcript-entry { margin: 0 0 18px; }.linux-command { color: #e6f4ef; }.linux-result-meta { margin-top: 4px; color: #527d7d; font-size: .69rem; }.linux-transcript-entry pre { margin: 5px 0 0; padding: 0; overflow-x: auto; color: #d6f3e8; white-space: pre-wrap; }.linux-transcript-entry .runner-stderr { color: #f0aaa0; }.linux-mission-error { margin-top: 10px; }
+@media (max-width: 760px) { .terminal-page[data-terminal-mode="linux"] .linux-runner { min-height: 500px; }.terminal-page[data-terminal-mode="linux"] .linux-terminal-content { min-height: 446px; padding: 22px 18px; }.terminal-page[data-terminal-mode="linux"] .linux-runner-form { flex-wrap: nowrap; padding: 0; } }
