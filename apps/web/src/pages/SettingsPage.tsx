@@ -1,5 +1,47 @@
-import { Download, Moon, RotateCcw, Save, Sun, Trash2 } from 'lucide-react';
+import { Download, RotateCcw, Trash2 } from 'lucide-react';
 import { useAppState } from '../app/AppState';
 import { SectionHeader } from '../components/SectionHeader';
+import type { AppState } from '../types';
 
-export function SettingsPage() { const { state, setState, resetProgress } = useAppState(); const exportData = () => { const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = 'os-a2z-progress.json'; link.click(); URL.revokeObjectURL(url); }; return <div className="page-stack"><SectionHeader eyebrow="SETTINGS / LOCAL PROFILE" title="Tune your learning workspace." description="This first release keeps progress locally in your browser. Export it before clearing the workspace." /><div className="settings-grid"><section className="panel settings-card"><span className="eyebrow">APPEARANCE</span><h2>Theme</h2><div className="theme-options"><button className={state.theme === 'dark' ? 'selected' : ''} onClick={() => setState((current) => ({ ...current, theme: 'dark' }))}><Moon size={18} /> Dark</button><button className={state.theme === 'light' ? 'selected' : ''} onClick={() => setState((current) => ({ ...current, theme: 'light' }))}><Sun size={18} /> Light</button></div><span className="eyebrow">PREFERENCES</span><h2>Learning goal</h2><select defaultValue="foundation"><option value="foundation">Build OS foundations</option><option value="interviews">Prepare for interviews</option><option value="linux">Become fluent in Linux</option></select><button className="button button-secondary save-button"><Save size={16} /> Preferences save automatically</button></section><section className="panel settings-card danger-card"><span className="eyebrow">DATA CONTROL</span><h2>Your local records</h2><p>{state.completedLessons.length} lessons, {state.solvedExercises.length} exercises, and {state.activity.length} activity events are stored in this browser.</p><button className="button button-secondary" onClick={exportData}><Download size={16} /> Export progress</button><button className="button button-danger" onClick={() => { if (window.confirm('Reset all local OS A2Z progress?')) resetProgress(); }}><Trash2 size={16} /> Reset all progress</button><small><RotateCcw size={14} /> Reset keeps the curriculum but clears your records.</small></section></div></div>; }
+type Goal = AppState['goal'];
+
+const goals: Array<{ value: Goal; label: string; detail: string }> = [
+  { value: 'foundation', label: 'Build OS foundations', detail: 'Follow the roadmap in order and finish every lesson challenge.' },
+  { value: 'interviews', label: 'Prepare for interviews', detail: 'Prioritise scheduling, paging, synchronization and deadlock analysis.' },
+  { value: 'linux', label: 'Become fluent in Linux', detail: 'Spend more time in the terminal, command reference and missions.' },
+];
+
+export function SettingsPage() {
+  const { state, setState, resetProgress } = useAppState();
+  const exportData = () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'os-a2z-progress.json';
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+  const activeGoal = goals.find((goal) => goal.value === state.goal) ?? goals[0];
+  return <div className="page-stack">
+    <SectionHeader eyebrow="SETTINGS / LOCAL PROFILE" title="Tune your learning workspace." description="Progress is stored in this browser until you connect an account. Export it before clearing the workspace." />
+    <div className="settings-grid">
+      <section className="panel settings-card">
+        <span className="eyebrow">PREFERENCES</span>
+        <h2>Learning goal</h2>
+        <select aria-label="Learning goal" value={state.goal} onChange={(event) => setState((current) => ({ ...current, goal: event.target.value as Goal }))}>
+          {goals.map((goal) => <option key={goal.value} value={goal.value}>{goal.label}</option>)}
+        </select>
+        <p className="settings-note">{activeGoal.detail}</p>
+      </section>
+      <section className="panel settings-card danger-card">
+        <span className="eyebrow">DATA CONTROL</span>
+        <h2>Your local records</h2>
+        <p>{state.completedLessons.length} lessons, {state.solvedExercises.length} exercises, and {state.activity.length} activity events are stored in this browser.</p>
+        <button className="button button-secondary" onClick={exportData}><Download size={16} /> Export progress</button>
+        <button className="button button-danger" onClick={() => { if (window.confirm('Reset all local OS A2Z progress?')) resetProgress(); }}><Trash2 size={16} /> Reset all progress</button>
+        <small><RotateCcw size={14} /> Reset keeps the curriculum but clears your records.</small>
+      </section>
+    </div>
+  </div>;
+}

@@ -22,6 +22,9 @@ The working first release includes:
 - Server-derived analytics for challenge coverage, reflections, practice attempts, and accuracy in the signed-in account view.
 - Practice lanes with module and difficulty filters for focused active recall.
 - Authenticated bounded Linux sandbox runner for real shell pipelines inside a non-root, network-disabled container.
+- A keyboard-first command palette (Ctrl/Cmd K) over pages, lessons, commands, and exercises.
+- A product landing page with live curriculum metrics, lab previews, a module index, and a footer.
+- Derived workspace metrics — activity streak, practice accuracy, and module mastery — with no placeholder figures.
 
 ## Run the web application
 
@@ -67,5 +70,7 @@ See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for the staging checklist, produc
 For a Vercel-plus-VPS handoff, see [`deploy/README.md`](deploy/README.md) and the included systemd, Caddy, environment, and Ubuntu bootstrap files.
 
 ## Important scope note
+
+The Linux missions page ships an offline catalogue that mirrors the API, so it stays useful when the API is not running.
 
 The browser keeps a deterministic simulator for guest learning and also exposes an authenticated Linux sandbox mode. Sandbox execution is bounded and isolated; a production deployment should move it behind a dedicated execution service before enabling it for many users.

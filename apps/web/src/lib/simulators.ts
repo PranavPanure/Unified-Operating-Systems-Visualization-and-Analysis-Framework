@@ -35,6 +35,20 @@ export function sjf(workload: ProcessInput[]): ScheduleResult {
   return result(workload, blocks);
 }
 
+function chooseLongest(ready: Array<ProcessInput & { left: number }>) {
+  return [...ready].sort((a, b) => b.left - a.left || a.arrival - b.arrival || a.id.localeCompare(b.id))[0];
+}
+
+export function ljf(workload: ProcessInput[]): ScheduleResult {
+  const remaining = [...workload]; const blocks: TimelineBlock[] = []; let time = 0;
+  while (remaining.length) {
+    const ready = remaining.filter((item) => item.arrival <= time).sort((a, b) => b.burst - a.burst || a.arrival - b.arrival);
+    if (!ready.length) { const next = Math.min(...remaining.map((item) => item.arrival)); blocks.push({ id: 'IDLE', start: time, end: next }); time = next; continue; }
+    const process = ready[0]; remaining.splice(remaining.indexOf(process), 1); blocks.push({ id: process.id, start: time, end: time + process.burst }); time += process.burst;
+  }
+  return result(workload, blocks);
+}
+
 function chooseShortest(ready: Array<ProcessInput & { left: number }>) {
   return [...ready].sort((a, b) => a.left - b.left || a.arrival - b.arrival || a.id.localeCompare(b.id))[0];
 }
@@ -45,6 +59,16 @@ export function srtf(workload: ProcessInput[]): ScheduleResult {
     const ready = remaining.filter((item) => item.left > 0 && item.arrival <= time);
     if (!ready.length) { const next = Math.min(...remaining.filter((item) => item.left > 0).map((item) => item.arrival)); blocks.push({ id: 'IDLE', start: time, end: next }); time = next; continue; }
     const process = chooseShortest(ready); blocks.push({ id: process.id, start: time, end: time + 1 }); process.left -= 1; time += 1;
+  }
+  return result(workload, blocks);
+}
+
+export function ljrtf(workload: ProcessInput[]): ScheduleResult {
+  const remaining = workload.map((item) => ({ ...item, left: item.burst })); const blocks: TimelineBlock[] = []; let time = 0;
+  while (remaining.some((item) => item.left > 0)) {
+    const ready = remaining.filter((item) => item.left > 0 && item.arrival <= time);
+    if (!ready.length) { const next = Math.min(...remaining.filter((item) => item.left > 0).map((item) => item.arrival)); blocks.push({ id: 'IDLE', start: time, end: next }); time = next; continue; }
+    const process = chooseLongest(ready); blocks.push({ id: process.id, start: time, end: time + 1 }); process.left -= 1; time += 1;
   }
   return result(workload, blocks);
 }

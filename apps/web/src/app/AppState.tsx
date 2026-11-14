@@ -45,7 +45,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AppState>(() => loadState());
   const { user } = useAuth();
   const [syncReadyFor, setSyncReadyFor] = useState<string | null>(null);
-  useEffect(() => { saveState(state); document.documentElement.dataset.theme = state.theme; }, [state]);
+  useEffect(() => { saveState(state); }, [state]);
   useEffect(() => {
     if (!user) { setSyncReadyFor(null); return; }
     let cancelled = false;

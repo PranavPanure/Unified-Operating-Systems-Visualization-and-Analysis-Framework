@@ -3,9 +3,18 @@ import { CheckCircle2, Filter, Lightbulb, RotateCcw, Send, XCircle } from 'lucid
 import { exercises, modules } from '../data/curriculum';
 import { useAppState } from '../app/AppState';
 import { SectionHeader } from '../components/SectionHeader';
-import type { Difficulty } from '../types';
+import type { Difficulty, Exercise } from '../types';
 
 const difficulties: Array<'All' | Difficulty> = ['All', 'Beginner', 'Intermediate', 'Advanced'];
+
+/** A hint that narrows the search using the exercise's own answer shape, without revealing it. */
+function hintFor(exercise: Exercise) {
+  const answer = exercise.answer.trim();
+  const first = answer[0]?.toUpperCase() ?? '';
+  if (exercise.options?.length) return `one of ${exercise.options.length} options is correct. Remove every option that describes a different layer of the system than the prompt asks about.`;
+  if (/\s/.test(answer)) return `the answer is ${answer.split(/\s+/).length} words long and starts with “${first}”.`;
+  return `the answer is a single term of ${answer.length} characters, starting with “${first}”.`;
+}
 
 export function PracticePage() {
   const { state, recordAttempt } = useAppState();
@@ -57,7 +66,7 @@ export function PracticePage() {
         <h2>{exercise.title}</h2>
         <p className="exercise-prompt">{exercise.prompt}</p>
         {exercise.options ? <div className="option-list">{exercise.options.map((option) => <button className={answer === option ? 'selected' : ''} key={option} onClick={() => !submitted && setAnswer(option)}><span>{answer === option ? '●' : '○'}</span>{option}</button>)}</div> : <input className="answer-input" value={answer} onChange={(event) => setAnswer(event.target.value)} placeholder="Type your answer..." disabled={submitted} />}
-        {showHint && !submitted && <div className="warning-card"><Lightbulb size={18} /><span>Hint: focus on the direct responsibility of the concept in this question. Try an answer before checking the explanation.</span></div>}
+        {showHint && !submitted && <div className="warning-card"><Lightbulb size={18} /><span>Hint: {hintFor(exercise)}</span></div>}
         {submitted && <div className={`feedback-card ${correct ? 'correct' : 'incorrect'}`}>{correct ? <CheckCircle2 size={20} /> : <XCircle size={20} />}<div><strong>{correct ? 'Correct — nice trace.' : 'Not quite yet.'}</strong><p>{exercise.explanation}</p></div></div>}
         <div className="exercise-footer">{!submitted ? <><button className="button button-secondary" onClick={() => setShowHint(true)}><Lightbulb size={16} /> Show hint</button><button className="button button-primary" onClick={submit} disabled={!answer}><Send size={16} /> Submit answer</button></> : <><button className="button button-secondary" onClick={() => { setAnswer(''); setSubmitted(false); setShowHint(false); }}><RotateCcw size={16} /> Retry</button><button className="button button-primary" onClick={next}>Next exercise <Send size={16} /></button></>}</div>
       </section>

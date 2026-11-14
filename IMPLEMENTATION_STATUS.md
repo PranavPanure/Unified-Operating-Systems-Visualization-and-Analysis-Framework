@@ -1,6 +1,29 @@
 # OS A2Z implementation status
 
-Updated: 2026-10-21
+Updated: 2026-11-14
+
+## Interactive lab refinement (2026-11-14)
+
+- [x] Fixed the deadlock lab's broken layout: `.deadlock-studio-route .app-shell` never matched the element carrying both classes, so the flex shell never applied and the entire main panel rendered below the fold. The selector is now compound.
+- [x] Fixed the same descendant-selector bug in the CPU, synchronization and disk labs, which had silently disabled their theme rules.
+- [x] Removed the standalone-product chrome from all five labs: the CPU lab linked to a third-party GitHub repository and four labs linked to a placeholder `https://github.com`. Every lab now shows `OS A2Z · <lab>` and a Workspace link back to the app.
+- [x] Replaced unloaded Google Font webfonts (`DM Sans`, `DM Mono`, `Manrope`) with the app's system stacks and removed the render-blocking `@import` requests from all five stylesheets.
+- [x] Gave each lab a distinct sidebar icon (paging, synchronization and deadlocks previously shared one).
+- [x] Retired the light theme: it was a root colour flip that left headings and panel text unreadable, so the app and every lab are now a single, consistent dark workspace instead of shipping a switch that broke pages.
+
+## Final product polish (2026-11-14)
+
+- [x] Unified the product name to OS A2Z across the landing page, sidebar, breadcrumbs, and page title; the previous UOSVAF naming is gone.
+- [x] Rebuilt the landing page with live curriculum metrics, five lab previews, a twelve-module index, and a footer.
+- [x] Made the topbar search real: a Ctrl/Cmd K command palette searches pages, lessons, commands, and exercises.
+- [x] Replaced placeholder dashboard figures (`/8` exercises, `0h 00m` learning time) with derived lessons, exercises, module mastery, and attempt accuracy.
+- [x] Replaced the hardcoded `0 day streak` with a real consecutive-day streak derived from recorded activity.
+- [x] Persisted the learning goal in settings instead of showing a select that saved nothing.
+- [x] Made practice hints data-aware (answer shape and option count) instead of the same generic sentence for every exercise.
+- [x] Added an offline mission catalogue so the missions page never renders empty without the API.
+- [x] Added a favicon and social metadata.
+- [x] Code-split each visualizer studio; the 530 kB visualizer chunk is now five focused chunks and the bundle-size warning is resolved.
+- [x] Added `product-styles.css` for the new landing, palette, and settings surfaces.
 
 ## Completed in this session
 
@@ -48,7 +71,14 @@ Updated: 2026-10-21
 - [x] Code-split visualizer and analytics routes; the previous initial-bundle warning is resolved.
 - [x] Added README, architecture documentation, security limitations, Makefile, and environment template.
 
-## Verification actually run
+## Verification actually run (2026-11-14 polish pass)
+
+- `npm run typecheck` — passed.
+- `npm test` — passed: 18 tests in 2 files.
+- `npm run build` — passed with no chunk-size warning; visualizer labs are emitted as separate route chunks.
+- `npm run dev` — server started and returned HTTP 200 on the landing route.
+
+## Verification from earlier sessions
 
 - `npm install` — completed; npm reported 0 vulnerabilities.
 - `npm run typecheck` — passed.

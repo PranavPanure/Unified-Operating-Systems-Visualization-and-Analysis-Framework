@@ -85,6 +85,6 @@ export type AppState = {
   noteConflicts: Record<string, { localBody: string; serverBody: string; serverUpdatedAt: string }>;
   activity: Activity[];
   attempts: AssessmentAttempt[];
-  theme: 'dark' | 'light';
+  goal: 'foundation' | 'interviews' | 'linux';
   streakAnchor: string;
 };
